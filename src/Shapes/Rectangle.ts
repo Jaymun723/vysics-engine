@@ -66,6 +66,8 @@ export class RectangleRigidShape extends BaseRigidShape {
   public getInertia(mass: number) {
     const c = 12
     if (mass === 0) return 0
-    return (mass * (this.width ** 2 + this.height ** 2)) / c
+    const invMass = 1 / mass
+    const invInertia = ((1 / invMass) * (this.width * this.width + this.height * this.height)) / c
+    return 1 / invInertia
   }
 }

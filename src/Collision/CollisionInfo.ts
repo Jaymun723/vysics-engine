@@ -1,5 +1,5 @@
-import { Vec2D } from 'maabm'
-import { RigidShape } from '../Shapes'
+import { Vec2D } from "maabm"
+import { RigidShape } from "../Shapes"
 
 interface CollisionInfoProps<AType = RigidShape, BType = RigidShape> {
   depth: number

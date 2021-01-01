@@ -1,6 +1,6 @@
 import { Vec2D } from "maabm"
 import { CircleRigidShape } from "../Shapes"
-import { CollisionInfo } from "./CollisionInfo"
+import { CollisionInfo } from "."
 
 export const circleCircleCollision = (a: CircleRigidShape, b: CircleRigidShape) => {
   const fromAtoB = b.center.sub(a.center)

@@ -1,5 +1,5 @@
-import { CircleRigidShape, RectangleRigidShape, RigidShape } from "../Shapes"
-import { CollisionInfo } from "./CollisionInfo"
+import { CircleRigidShape, RectangleRigidShape } from "../Shapes"
+import { CollisionInfo } from "."
 
 const nearestEdge = (a: RectangleRigidShape, b: CircleRigidShape) => {
   let bestDistance = -Infinity
