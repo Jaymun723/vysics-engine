@@ -7,7 +7,6 @@ export const resolveCollision = (
 ) => {
   if (collision.a.invMass === 0 && collision.b.invMass === 0) return
 
-  // Positional
   if (positionalCorrection) {
     const correctionAmount = (collision.depth / (collision.a.invMass + collision.b.invMass)) * positionalCorrection.rate
     const correctionVector = collision.normal.mul(correctionAmount)
@@ -50,16 +49,15 @@ export const resolveCollision = (
     (-(1 + restitution) * rVelocityInNormal) /
     (collision.a.invMass +
       collision.b.invMass +
-      rACrossN * rACrossN * collision.a.inertia +
-      rBCrossN * rBCrossN * collision.b.inertia)
+      rACrossN * rACrossN * collision.a.invInertia +
+      rBCrossN * rBCrossN * collision.b.invInertia)
 
   const impulseNormal = n.mul(jN)
 
   collision.a.velocity = collision.a.velocity.sub(impulseNormal.mul(collision.a.invMass))
   collision.b.velocity = collision.b.velocity.add(impulseNormal.mul(collision.b.invMass))
-
-  collision.a.angularVelocity -= rACrossN * jN * collision.a.inertia
-  collision.b.angularVelocity += rBCrossN * jN * collision.b.inertia
+  collision.a.angularVelocity -= rACrossN * jN * collision.a.invInertia
+  collision.b.angularVelocity += rBCrossN * jN * collision.b.invInertia
 
   const tangent = relativeVelocity.sub(n.mul(rVelocityInNormal)).normalize().mul(-1)
 
@@ -70,8 +68,8 @@ export const resolveCollision = (
     (-(1 + restitution) * relativeVelocity.dot(tangent) * friction) /
     (collision.a.invMass +
       collision.b.invMass +
-      rACrossT * rACrossT * collision.a.inertia +
-      rBCrossT * rBCrossT * collision.b.inertia)
+      rACrossT * rACrossT * collision.a.invInertia +
+      rBCrossT * rBCrossT * collision.b.invInertia)
 
   if (jT > jN) {
     jT = jN
@@ -81,6 +79,6 @@ export const resolveCollision = (
 
   collision.a.velocity = collision.a.velocity.sub(impulseTangent.mul(collision.a.invMass))
   collision.b.velocity = collision.b.velocity.add(impulseTangent.mul(collision.b.invMass))
-  collision.a.angularVelocity -= rACrossT * jT * collision.a.inertia
-  collision.b.angularVelocity += rBCrossT * jT * collision.b.inertia
+  collision.a.angularVelocity -= rACrossT * jT * collision.a.invInertia
+  collision.b.angularVelocity += rBCrossT * jT * collision.b.invInertia
 }

@@ -1,5 +1,6 @@
 import { Vec2D } from "maabm"
 import { BaseRigidShape, BaseRigidShapeProps } from "."
+import { PolygonRigidShape } from "./Polygon"
 
 export interface RectangleRigidShapeProps extends BaseRigidShapeProps {
   width: number
@@ -11,7 +12,7 @@ export class RectangleRigidShape extends BaseRigidShape {
   public height: number
   public vertices: Vec2D[]
   public normals: Vec2D[]
-  public boundRadius: number
+  public boundAABB: Vec2D
 
   public type = "rectangle" as const
 
@@ -20,13 +21,13 @@ export class RectangleRigidShape extends BaseRigidShape {
     this.width = ops.width
     this.height = ops.height
 
-    this.boundRadius = Math.sqrt((this.width / 2) ** 2 + (this.height / 2) ** 2)
+    this.boundAABB = new Vec2D(this.width, this.height)
 
     this.vertices = [
       this.center.add(-this.width / 2, -this.height / 2),
-      this.center.add(this.width / 2, -this.height / 2),
-      this.center.add(this.width / 2, this.height / 2),
       this.center.add(-this.width / 2, this.height / 2),
+      this.center.add(this.width / 2, this.height / 2),
+      this.center.add(this.width / 2, -this.height / 2),
     ]
 
     this.normals = RectangleRigidShape.computeNormal(this.vertices)
@@ -61,13 +62,11 @@ export class RectangleRigidShape extends BaseRigidShape {
       this.vertices[i] = this.vertices[i].rotateAround(this.center, angle)
     }
     this.normals = RectangleRigidShape.computeNormal(this.vertices)
+    this.boundAABB = PolygonRigidShape.computeAABB(this.vertices)
   }
 
   public getInertia(mass: number) {
-    const c = 12
     if (mass === 0) return 0
-    const invMass = 1 / mass
-    const invInertia = ((1 / invMass) * (this.width * this.width + this.height * this.height)) / c
-    return 1 / invInertia
+    return (mass * (this.width ** 2 + this.height ** 2)) / 12
   }
 }

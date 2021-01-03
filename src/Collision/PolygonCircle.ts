@@ -1,10 +1,10 @@
-import { CircleRigidShape, RectangleRigidShape } from "../Shapes"
+import { CircleRigidShape, PolygonRigidShape, RectangleRigidShape } from "../Shapes"
 import { CollisionInfo } from "."
 
-const nearestEdge = (a: RectangleRigidShape, b: CircleRigidShape) => {
+const nearestEdge = (a: PolygonRigidShape | RectangleRigidShape, b: CircleRigidShape) => {
   let bestDistance = -Infinity
   let nearestEdgeIndex = 0
-  for (let i = 0; i < 4; ++i) {
+  for (let i = 0; i < a.vertices.length; ++i) {
     const v = b.center.sub(a.vertices[i])
     const projection = v.dot(a.normals[i])
     if (projection > 0) {
@@ -26,12 +26,12 @@ const nearestEdge = (a: RectangleRigidShape, b: CircleRigidShape) => {
   }
 }
 
-export const rectangleCircleCollision = (a: RectangleRigidShape, b: CircleRigidShape) => {
+export const polygonCircleCollision = (a: PolygonRigidShape | RectangleRigidShape, b: CircleRigidShape) => {
   const { distance, inside, nearestEdgeIndex } = nearestEdge(a, b)
 
   if (!inside) {
     const v1 = b.center.sub(a.vertices[nearestEdgeIndex])
-    const v2 = a.vertices[(nearestEdgeIndex + 1) % 4].sub(a.vertices[nearestEdgeIndex])
+    const v2 = a.vertices[(nearestEdgeIndex + 1) % a.vertices.length].sub(a.vertices[nearestEdgeIndex])
     const dot = v1.dot(v2)
 
     if (dot < 0) {
@@ -49,8 +49,8 @@ export const rectangleCircleCollision = (a: RectangleRigidShape, b: CircleRigidS
         start: b.center.add(radiusVec),
       })
     } else {
-      const v1 = b.center.sub(a.vertices[(nearestEdgeIndex + 1) % 4])
-      const v2 = a.vertices[nearestEdgeIndex].sub(a.vertices[(nearestEdgeIndex + 1) % 4])
+      const v1 = b.center.sub(a.vertices[(nearestEdgeIndex + 1) % a.vertices.length])
+      const v2 = a.vertices[nearestEdgeIndex].sub(a.vertices[(nearestEdgeIndex + 1) % a.vertices.length])
       const dot = v1.dot(v2)
       if (dot < 0) {
         const dist = v1.norm()

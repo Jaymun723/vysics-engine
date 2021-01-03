@@ -1,5 +1,6 @@
 import { Vec2D } from "maabm"
 import { CircleRigidShape } from "./Circle"
+import { PolygonRigidShape } from "./Polygon"
 import { RectangleRigidShape } from "./Rectangle"
 
 export interface BaseRigidShapeProps {
@@ -10,7 +11,7 @@ export interface BaseRigidShapeProps {
 export abstract class BaseRigidShape {
   public center: Vec2D
   public angle: number
-  public abstract boundRadius: number
+  public abstract boundAABB: Vec2D
   public abstract type: string
 
   constructor(ops: BaseRigidShapeProps) {
@@ -27,5 +28,6 @@ export abstract class BaseRigidShape {
 
 export * from "./Rectangle"
 export * from "./Circle"
+export * from "./Polygon"
 
-export type RigidShape = CircleRigidShape | RectangleRigidShape
+export type RigidShape = CircleRigidShape | RectangleRigidShape | PolygonRigidShape

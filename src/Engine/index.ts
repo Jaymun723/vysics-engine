@@ -1,9 +1,10 @@
 import { Vec2D } from "maabm"
 import { resolveCollision } from "../Collision"
 import { PhysicalObject } from "../Objects"
-import { broadPhase } from "./BroadPhase"
+import { gravityHook, CollisionHook, UpdateHook } from "./Hooks"
+import { BroadPhaseBaseFunction, bruteBroadPhase, gridBroadPhase } from "../BroadPhase"
 
-export * from "./BroadPhase"
+export * from "./Hooks"
 
 interface PositionalCorrection {
   iterations: number
@@ -12,24 +13,43 @@ interface PositionalCorrection {
 
 interface PhysicsEngineProps {
   objects: PhysicalObject[]
+  width: number
+  height: number
+
   positionalCorrection?: PositionalCorrection
   fps?: number
-  preUpdateHook?: (dt: number) => void
-  postUpdateHook?: (dt: number) => void
+
+  preUpdateHooks?: UpdateHook[]
+  postUpdateHooks?: UpdateHook[]
   drawHook?: () => void
+
+  shouldCollideHook?: CollisionHook<boolean>
+  postCollideHook?: CollisionHook
+
+  broadPhase?: "grid" | "brute"
+  pxPerCell?: number
 }
 
 export class PhysicsEngine {
   public objects: PhysicalObject[]
+  public width: number
+  public height: number
   public positionalCorrection?: PositionalCorrection
+
+  public broadPhaseFunction: BroadPhaseBaseFunction
 
   public fps: number
   public updateIntervalMilliseconds: number
   public updateIntervalSeconds: number
+  public dt: number
 
-  public preUpdateHook?: (dt: number) => void
-  public postUpdateHook?: (dt: number) => void
+  public preUpdateHooks: UpdateHook[]
+  public postUpdateHooks: UpdateHook[]
+  public shouldCollideHook?: CollisionHook<boolean>
+  public postCollideHook?: CollisionHook
   public drawHook?: () => void
+
+  private idIncrementor = 0
 
   private running = false
   private time = {
@@ -43,13 +63,53 @@ export class PhysicsEngine {
 
   constructor(ops: PhysicsEngineProps) {
     this.objects = ops.objects
+    for (const obj of this.objects) {
+      obj.id = this.idIncrementor
+      this.idIncrementor++
+    }
+
+    this.width = ops.width
+    this.height = ops.height
+
+    if (ops.broadPhase && ops.broadPhase === "brute") {
+      this.broadPhaseFunction = bruteBroadPhase
+    } else {
+      this.broadPhaseFunction = (props) =>
+        gridBroadPhase({
+          min: new Vec2D(0, 0),
+          max: new Vec2D(this.width, this.height),
+          pxPerCell: ops.pxPerCell || 10,
+          ...props,
+        })
+    }
+
     this.positionalCorrection = ops.positionalCorrection
     this.fps = ops.fps || 60
     this.updateIntervalMilliseconds = 1000 / this.fps
     this.updateIntervalSeconds = 1 / this.fps
-    this.preUpdateHook = ops.preUpdateHook
-    this.postUpdateHook = ops.postUpdateHook
+    this.dt = this.updateIntervalSeconds
+
+    this.preUpdateHooks = ops.preUpdateHooks || [gravityHook]
+    this.postUpdateHooks = ops.preUpdateHooks || []
+
     this.drawHook = ops.drawHook
+
+    this.shouldCollideHook = ops.shouldCollideHook
+    this.postCollideHook = ops.postCollideHook
+  }
+
+  public addPreUpdateHook(hook: UpdateHook) {
+    this.preUpdateHooks.push(hook)
+  }
+
+  public addPostUpdateHook(hook: UpdateHook) {
+    this.postUpdateHooks.push(hook)
+  }
+
+  public addObject(object: PhysicalObject) {
+    object.id = this.idIncrementor
+    this.idIncrementor++
+    this.objects.push(object)
   }
 
   public start() {
@@ -75,15 +135,19 @@ export class PhysicsEngine {
     this.time.previous = this.time.current
     this.time.lag += this.time.elapsed
 
+    if (this.drawHook) this.drawHook()
+
     while (this.time.lag >= this.updateIntervalMilliseconds) {
       this.time.lag -= this.updateIntervalMilliseconds
-      if (this.preUpdateHook) this.preUpdateHook(this.updateIntervalSeconds)
+      for (const preHook of this.preUpdateHooks) {
+        preHook(this)
+      }
       this.computeCollisions()
       this.update(this.updateIntervalSeconds)
-      if (this.postUpdateHook) this.postUpdateHook(this.updateIntervalSeconds)
+      for (const postHook of this.postUpdateHooks) {
+        postHook(this)
+      }
     }
-
-    if (this.drawHook) this.drawHook()
   }
 
   public update(dt: number) {
@@ -93,18 +157,24 @@ export class PhysicsEngine {
   }
 
   public computeCollisions() {
-    if (this.positionalCorrection) {
-      for (let i = 0; i < this.positionalCorrection.iterations; i++) {
-        const collisions = broadPhase(this.objects)
-        for (const collision of collisions) {
-          resolveCollision(collision, this.positionalCorrection)
-        }
-      }
-    } else {
-      const collisions = broadPhase(this.objects)
+    const resolution = () => {
+      const collisions = this.broadPhaseFunction({ objects: this.objects })
       for (const collision of collisions) {
-        resolveCollision(collision)
+        if (this.shouldCollideHook) {
+          const res = this.shouldCollideHook(collision)
+          if (!res) {
+            continue
+          }
+        }
+        resolveCollision(collision, this.positionalCorrection)
+        if (this.postCollideHook) this.postCollideHook(collision)
       }
+    }
+
+    if (this.positionalCorrection) {
+      resolution()
+    } else {
+      resolution()
     }
   }
 }

@@ -1,6 +1,6 @@
 import { Vec2D } from "maabm"
-import { RectangleRigidShape } from "../Shapes"
 import { CollisionInfo } from "."
+import { RectangleRigidShape, PolygonRigidShape } from "../Shapes"
 
 interface SupportPoint {
   dist: number
@@ -28,7 +28,10 @@ const findSupportPoint = (vertices: Vec2D[], dir: Vec2D, ptOnEdge: Vec2D) => {
   }
 }
 
-const findAxisLeastPenetration = (a: RectangleRigidShape, b: RectangleRigidShape) => {
+const findAxisLeastPenetration = (
+  a: PolygonRigidShape | RectangleRigidShape,
+  b: PolygonRigidShape | RectangleRigidShape
+) => {
   let supportPoint
   let bestDistance = Infinity
   let bestIndex = 0
@@ -64,7 +67,10 @@ const findAxisLeastPenetration = (a: RectangleRigidShape, b: RectangleRigidShape
   return false
 }
 
-export const rectangleRectangleCollision = (a: RectangleRigidShape, b: RectangleRigidShape) => {
+export const polygonPolygonCollision = (
+  a: PolygonRigidShape | RectangleRigidShape,
+  b: PolygonRigidShape | RectangleRigidShape
+) => {
   const axisAB = findAxisLeastPenetration(a, b)
   if (axisAB !== false) {
     const axisBA = findAxisLeastPenetration(b, a)

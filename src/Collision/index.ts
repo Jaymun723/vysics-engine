@@ -1,5 +1,5 @@
 export * from "./CircleCircle"
 export * from "./CollisionInfo"
-export * from "./RectangleCircle"
-export * from "./RectangleRectangle"
+export * from "./PolygonCircle"
+export * from "./PolygonPolygon"
 export * from "./resolveCollision"

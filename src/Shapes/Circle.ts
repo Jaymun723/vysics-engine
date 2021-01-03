@@ -8,7 +8,7 @@ export interface CircleRigidShapeProps extends BaseRigidShapeProps {
 export class CircleRigidShape extends BaseRigidShape {
   public radius: number
   public linePoint: Vec2D
-  public boundRadius: number
+  public boundAABB: Vec2D
 
   public type = "circle" as const
 
@@ -16,7 +16,7 @@ export class CircleRigidShape extends BaseRigidShape {
     super(ops)
 
     this.radius = ops.radius
-    this.boundRadius = this.radius
+    this.boundAABB = new Vec2D(this.radius * 2, this.radius * 2)
     this.linePoint = this.center.add(this.radius, 0)
   }
 
@@ -31,8 +31,7 @@ export class CircleRigidShape extends BaseRigidShape {
   }
 
   public getInertia(mass: number) {
-    const c = 12
     if (mass === 0) return 0
-    return (mass * this.radius ** 2) / c
+    return (mass * this.radius ** 2) / 12
   }
 }
