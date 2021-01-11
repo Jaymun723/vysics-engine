@@ -70,15 +70,27 @@ export class PhysicalObject<Shape extends BaseRigidShape = RigidShape> {
   }
 
   public update(dt: number) {
-    this.acceleration = this.force.mul(this.invMass)
-    this.velocity = this.velocity.add(this.acceleration.mul(dt))
-    this.move(this.velocity.mul(dt))
+    const newPosition = this.position.add(this.velocity.mul(dt).add(this.acceleration.mul(dt ** 2 * 0.5)))
+
+    const newAcceleration = this.force.mul(this.invMass)
+    const newVelocity = this.velocity.add(this.acceleration.add(newAcceleration).mul(dt * 0.5))
+
+    const deltaPos = newPosition.sub(this.position)
+    this.move(deltaPos)
+    this.acceleration = newAcceleration
+    this.velocity = newVelocity
 
     this.force = new Vec2D(0, 0)
 
-    this.angularAcceleration = this.torque * this.invInertia
-    this.angularVelocity += this.angularAcceleration * dt
-    this.rotate(this.angularVelocity * dt)
+    const newAngle = this.angle + this.angularVelocity * dt + this.angularAcceleration * (dt ** 2 * 0.5)
+
+    const newAngularAcceleration = this.torque * this.invInertia
+    const newAngularVelocity = this.angularVelocity + (this.angularAcceleration + newAngularAcceleration) * (dt * 0.5)
+
+    const deltaAng = newAngle - this.angle
+    this.rotate(deltaAng)
+    this.angularAcceleration = newAngularAcceleration
+    this.angularVelocity = newAngularVelocity
 
     this.torque = 0
   }

@@ -8,7 +8,7 @@ export type UpdateHook = (engine: PhysicsEngine) => void
 export const gravityHook: UpdateHook = (engine) => {
   for (const object of engine.objects) {
     if (object.hasGravity) {
-      object.force = object.force.add(PhysicsEngine.gravity.mul(10))
+      object.force = object.force.add(PhysicsEngine.gravity)
     }
   }
 }

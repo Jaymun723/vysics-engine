@@ -5,7 +5,7 @@
   "main": "",
   "scripts": {
     "build": "ts-node scripts/build.ts",
-    "test": "parcel test/index.html",
+    "test": "parcel playground/index.html",
     "prettier": "prettier --write ."
   },
   "keywords": [
