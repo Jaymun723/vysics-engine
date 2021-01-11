@@ -24,6 +24,8 @@ export abstract class BaseRigidShape {
   public abstract rotate(angle: number): void
 
   public abstract getInertia(invMass: number): number
+
+  public abstract getArea(): number
 }
 
 export * from "./Rectangle"

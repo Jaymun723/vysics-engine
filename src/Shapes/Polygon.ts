@@ -92,4 +92,8 @@ export class PolygonRigidShape extends BaseRigidShape {
   public getInertia(mass: number) {
     return Polygon.getMomentOfInertia(this.vertices, mass)
   }
+
+  public getArea() {
+    return Polygon.getArea(this.vertices)
+  }
 }

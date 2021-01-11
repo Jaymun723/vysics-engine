@@ -34,4 +34,8 @@ export class CircleRigidShape extends BaseRigidShape {
     if (mass === 0) return 0
     return (mass * this.radius ** 2) / 12
   }
+
+  public getArea() {
+    return Math.PI * this.radius ** 2
+  }
 }

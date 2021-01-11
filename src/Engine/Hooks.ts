@@ -13,6 +13,22 @@ export const gravityHook: UpdateHook = (engine) => {
   }
 }
 
+export const createDragHook = (density: number) => {
+  const dragHook: UpdateHook = (engine) => {
+    for (const object of engine.objects) {
+      if (object.dragCoefficient) {
+        const v = object.velocity
+        const vSquared = v.mul(v)
+        const area = object.shape.getArea()
+        const f = vSquared.mul(area * density * object.dragCoefficient * -0.5)
+        object.force = object.force.add(f)
+      }
+    }
+  }
+
+  return dragHook
+}
+
 interface ApplyFlickProps {
   object: PhysicalObject
   pointOfApplication: Vec2D

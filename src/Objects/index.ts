@@ -10,6 +10,7 @@ interface PhysicalObjectProps<Shape extends BaseRigidShape = RigidShape> {
   initialAngularVelocity?: number
 
   hasGravity?: boolean
+  dragCoefficient?: number
 }
 
 export class PhysicalObject<Shape extends BaseRigidShape = RigidShape> {
@@ -35,6 +36,7 @@ export class PhysicalObject<Shape extends BaseRigidShape = RigidShape> {
   public restitution: number
 
   public hasGravity: boolean
+  public dragCoefficient?: number
 
   constructor(ops: PhysicalObjectProps<Shape>) {
     this.shape = ops.shape
@@ -67,6 +69,8 @@ export class PhysicalObject<Shape extends BaseRigidShape = RigidShape> {
       this.inertia = 0
       this.invInertia = 0
     }
+
+    this.dragCoefficient = ops.dragCoefficient
   }
 
   public update(dt: number) {

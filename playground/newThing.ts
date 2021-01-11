@@ -39,11 +39,11 @@ const physicalObjects = [
     mass: 1,
     shape: new RectangleRigidShape({
       angle: 0,
-      center: new Vec2D(0.5, 4),
+      center: new Vec2D(2.5, 0),
       height: 1,
       width: 1,
     }),
-    initialVelocity: new Vec2D(2, -2),
+    dragCoefficient: 1,
   }),
 ]
 

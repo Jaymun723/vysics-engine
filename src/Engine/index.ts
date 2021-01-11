@@ -1,7 +1,7 @@
 import { Vec2D } from "maabm"
 import { resolveCollision } from "../Collision"
 import { PhysicalObject } from "../Objects"
-import { gravityHook, CollisionHook, UpdateHook } from "./Hooks"
+import { gravityHook, CollisionHook, UpdateHook, createDragHook } from "./Hooks"
 import { BroadPhaseBaseFunction, bruteBroadPhase, gridBroadPhase } from "../BroadPhase"
 
 export * from "./Hooks"
@@ -28,6 +28,8 @@ interface PhysicsEngineProps {
 
   broadPhase?: "grid" | "brute"
   pxPerCell?: number
+
+  density?: number
 }
 
 export class PhysicsEngine {
@@ -89,7 +91,10 @@ export class PhysicsEngine {
     this.updateIntervalSeconds = 1 / this.fps
     this.dt = this.updateIntervalSeconds
 
-    this.preUpdateHooks = ops.preUpdateHooks || [gravityHook]
+    const density = ops.density || 1.2
+    const dragHook = createDragHook(density)
+
+    this.preUpdateHooks = ops.preUpdateHooks || [gravityHook, dragHook]
     this.postUpdateHooks = ops.preUpdateHooks || []
 
     this.drawHook = ops.drawHook

@@ -69,4 +69,8 @@ export class RectangleRigidShape extends BaseRigidShape {
     if (mass === 0) return 0
     return (mass * (this.width ** 2 + this.height ** 2)) / 12
   }
+
+  public getArea() {
+    return this.width * this.height
+  }
 }
