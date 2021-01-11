@@ -3,15 +3,34 @@ import { BaseRigidShape, BaseRigidShapeProps } from "."
 import { PolygonRigidShape } from "./Polygon"
 
 export interface RectangleRigidShapeProps extends BaseRigidShapeProps {
+  /**
+   * In m
+   */
   width: number
+  /**
+   * In m
+   */
   height: number
 }
 
 export class RectangleRigidShape extends BaseRigidShape {
+  /**
+   * In m
+   */
   public width: number
+
+  /**
+   * In m
+   */
   public height: number
+
+  /**
+   * In m
+   */
   public vertices: Vec2D[]
+
   public normals: Vec2D[]
+
   public boundAABB: Vec2D
 
   public type = "rectangle" as const

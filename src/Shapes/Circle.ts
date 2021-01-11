@@ -2,12 +2,23 @@ import { Vec2D } from "maabm"
 import { BaseRigidShape, BaseRigidShapeProps } from "."
 
 export interface CircleRigidShapeProps extends BaseRigidShapeProps {
+  /**
+   * In m
+   */
   radius: number
 }
 
 export class CircleRigidShape extends BaseRigidShape {
+  /**
+   * In m
+   */
   public radius: number
+
+  /**
+   * For visualisation/debug purposes.
+   */
   public linePoint: Vec2D
+
   public boundAABB: Vec2D
 
   public type = "circle" as const

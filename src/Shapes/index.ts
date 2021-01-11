@@ -4,14 +4,34 @@ import { PolygonRigidShape } from "./Polygon"
 import { RectangleRigidShape } from "./Rectangle"
 
 export interface BaseRigidShapeProps {
+  /**
+   * The distance between the centroid of the shape and the origin.
+   * In m
+   */
   center: Vec2D
+  /**
+   * In rad
+   */
   angle: number
 }
 
 export abstract class BaseRigidShape {
+  /**
+   * The distance between the centroid of the shape and the origin.
+   * In m
+   */
   public center: Vec2D
+
+  /**
+   * In rad
+   */
   public angle: number
+
+  /**
+   * The boundAABB vector hold the width of the AABB in the x component and its height in the y component.
+   */
   public abstract boundAABB: Vec2D
+
   public abstract type: string
 
   constructor(ops: BaseRigidShapeProps) {
@@ -19,12 +39,25 @@ export abstract class BaseRigidShape {
     this.angle = ops.angle
   }
 
+  /**
+   * @param direction In m
+   */
   public abstract move(direction: Vec2D): void
 
+  /**
+   * @param angle In rad
+   */
   public abstract rotate(angle: number): void
 
-  public abstract getInertia(invMass: number): number
+  /**
+   * @param mass In kg
+   * @returns The moment of inertia in kg*m^2
+   */
+  public abstract getInertia(mass: number): number
 
+  /**
+   * @returns The area in m^2
+   */
   public abstract getArea(): number
 }
 

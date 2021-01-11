@@ -2,13 +2,22 @@ import { Vec2D, Polygon } from "maabm"
 import { BaseRigidShape, BaseRigidShapeProps } from "."
 
 export interface PolygonRigidShapeProps extends Omit<BaseRigidShapeProps, "center"> {
+  /**
+   * In m
+   */
   vertices: Vec2D[]
 }
 
 export class PolygonRigidShape extends BaseRigidShape {
   public center: Vec2D
+
+  /**
+   * In m
+   */
   public vertices: Vec2D[]
+
   public normals: Vec2D[]
+
   public boundAABB: Vec2D
 
   public type = "polygon" as const
@@ -35,6 +44,9 @@ export class PolygonRigidShape extends BaseRigidShape {
     }
   }
 
+  /**
+   * Construct a polygon from a given point, the coordinates of the vertices are relative to the given point.
+   */
   public static fromCenter(ops: PolygonRigidShapeProps & { center: Vec2D }) {
     return new PolygonRigidShape({
       ...ops,
