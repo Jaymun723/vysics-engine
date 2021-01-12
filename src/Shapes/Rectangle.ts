@@ -92,4 +92,13 @@ export class RectangleRigidShape extends BaseRigidShape {
   public getArea() {
     return this.width * this.height
   }
+
+  public copy(): RectangleRigidShape {
+    return new RectangleRigidShape({
+      angle: this.angle,
+      center: this.center,
+      height: this.height,
+      width: this.width,
+    })
+  }
 }

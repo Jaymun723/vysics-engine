@@ -59,6 +59,9 @@ export abstract class BaseRigidShape {
    * @returns The area in m^2
    */
   public abstract getArea(): number
+
+  // TODO: maybe a better handling of this
+  public abstract copy(): BaseRigidShape
 }
 
 export * from "./Rectangle"

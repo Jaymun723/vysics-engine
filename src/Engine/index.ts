@@ -50,7 +50,7 @@ interface PhysicsEngineProps {
   /**
    * Called after all of the objects are correctly updated.
    */
-  drawHook?: () => void
+  drawHook?: (engine: PhysicsEngine) => void
 
   /**
    * Used to implement game collision logic.
@@ -142,7 +142,7 @@ export class PhysicsEngine {
   /**
    * Called after all of the objects are correctly updated.
    */
-  public drawHook?: () => void
+  public drawHook?: (engine: PhysicsEngine) => void
 
   private idIncrementor = 0
 
@@ -224,6 +224,10 @@ export class PhysicsEngine {
     this.objects.push(object)
   }
 
+  public removeObject(id: number) {
+    this.objects = this.objects.filter((o) => o.id !== id)
+  }
+
   public start() {
     this.running = true
     this.step()
@@ -247,7 +251,7 @@ export class PhysicsEngine {
     this.time.previous = this.time.current
     this.time.lag += this.time.elapsed
 
-    if (this.drawHook) this.drawHook()
+    if (this.drawHook) this.drawHook(this)
 
     while (this.time.lag >= this.updateIntervalMilliseconds) {
       this.time.lag -= this.updateIntervalMilliseconds

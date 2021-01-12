@@ -108,4 +108,11 @@ export class PolygonRigidShape extends BaseRigidShape {
   public getArea() {
     return Polygon.getArea(this.vertices)
   }
+
+  public copy(): PolygonRigidShape {
+    return new PolygonRigidShape({
+      angle: this.angle,
+      vertices: this.vertices,
+    })
+  }
 }

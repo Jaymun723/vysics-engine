@@ -49,6 +49,7 @@ Based on:
 
 ### More engine related parts
 
+- Debug drawings (using [Vancas](https://github.com/Voxylu/vancas)) 🔜
 - Tests (using jest) 🔜 (maybe never 😞)
 - Integration with [Vancas](https://github.com/Voxylu/vancas) 🔜
 - Optimisation (not a priority) 🔜

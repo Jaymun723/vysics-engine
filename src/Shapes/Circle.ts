@@ -49,4 +49,12 @@ export class CircleRigidShape extends BaseRigidShape {
   public getArea() {
     return Math.PI * this.radius ** 2
   }
+
+  public copy(): CircleRigidShape {
+    return new CircleRigidShape({
+      angle: this.angle,
+      center: this.center,
+      radius: this.radius,
+    })
+  }
 }

@@ -209,4 +209,21 @@ export class PhysicalObject<Shape extends BaseRigidShape = RigidShape> {
     this.angle += angle
     this.shape.rotate(angle)
   }
+
+  public copy() {
+    const copy = new PhysicalObject({
+      mass: this.mass,
+      shape: this.shape.copy() as Shape,
+      dragCoefficient: this.dragCoefficient,
+      friction: this.friction,
+      hasGravity: this.hasGravity,
+      initialAngularVelocity: this.angularVelocity,
+      initialVelocity: this.velocity,
+      restitution: this.restitution,
+    })
+    copy.force = this.force
+    copy.torque = this.torque
+
+    return copy
+  }
 }
