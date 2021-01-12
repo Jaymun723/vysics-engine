@@ -29,11 +29,21 @@ export const createDragHook = (density: number) => {
   return dragHook
 }
 
-interface ApplyFlickProps {
+export interface ApplyFlickProps {
   object: PhysicalObject
+  /**
+   * The point of application must be in the object shape.
+   * In m
+   */
   pointOfApplication: Vec2D
+  /**
+   * In N
+   */
   force: Vec2D
 }
+/**
+ * `applyFlick` is a shorthand function to apply a specified force on an object at a given point.
+ */
 export const applyFlick = ({ force, object, pointOfApplication }: ApplyFlickProps) => {
   if (object.shape.type === "circle") {
     const dist = object.position.sub(pointOfApplication).norm()

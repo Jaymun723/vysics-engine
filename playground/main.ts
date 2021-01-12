@@ -290,7 +290,7 @@ const engine = new PhysicsEngine({
   positionalCorrection: { iterations: 15, rate: 0.8 },
   height: 500,
   width: 500,
-  pxPerCell: 25,
+  mPerCell: 25,
   fps: 120,
   broadPhase: "grid",
   drawHook: () => {

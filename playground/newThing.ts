@@ -51,7 +51,7 @@ const engine = new PhysicsEngine({
   width: dimensions.engine.x,
   height: dimensions.engine.y,
   objects: physicalObjects,
-  pxPerCell: 1,
+  mPerCell: 1,
   positionalCorrection: { iterations: 15, rate: 0.8 },
   drawHook: () => {
     vancas.background("grey")
