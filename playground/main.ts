@@ -1,10 +1,15 @@
-import { moveSync } from "fs-extra"
+/**
+ * For now the code of the playground is a bit messy...
+ * Nonetheless it's a good overview of a how to use the vysics-engine.
+ */
 import { Vec2D } from "maabm"
 import { createVancas } from "vancas"
 import { PhysicsEngine } from "../src/Engine"
 import { PhysicalObject } from "../src/Objects"
 import { CircleRigidShape, RectangleRigidShape } from "../src/Shapes"
 import { Drawers } from "./drawers"
+import { ForceApplier } from "./ForceApplier"
+import { Menu } from "./menu"
 import { Mouse } from "./mouse"
 
 const vancas = createVancas({
@@ -61,7 +66,7 @@ const wall = new PhysicalObject({
 })
 
 const roof = new PhysicalObject({
-  // Staitc
+  // Static
   mass: 0,
   shape: new RectangleRigidShape({
     angle: -Math.PI / 12,
@@ -76,7 +81,7 @@ const fallingBall = new PhysicalObject({
   shape: new CircleRigidShape({
     angle: 0,
     center: new Vec2D(world.width / 2, 1),
-    radius: 1,
+    radius: 3,
   }),
 })
 
@@ -107,6 +112,7 @@ window.addEventListener("keydown", (e) => {
       }),
     })
     engine.addObject(newObj)
+    menu.select(newObj.id)
   }
   if (e.key === "c") {
     const newObj = new PhysicalObject({
@@ -118,6 +124,7 @@ window.addEventListener("keydown", (e) => {
       }),
     })
     engine.addObject(newObj)
+    menu.select(newObj.id)
   }
 })
 
@@ -125,58 +132,7 @@ const engine = new PhysicsEngine({
   width: world.width,
   height: world.height,
   objects: startingObjects.map((o) => o.copy()),
-  drawHook: (engine) => {
-    vancas.background("lightgrey")
-
-    const colors = ["white", "red", "purple", "yellow", "green", "blue", "orange", "pink", "cyan"]
-
-    for (const obj of engine.objects) {
-      if (obj.mass === 0) {
-        drawers.draw(obj, "black")
-      } else {
-        drawers.draw(obj, colors[obj.id % colors.length])
-      }
-    }
-
-    if (mouse.position) {
-      const pos = mouse.position
-      const w = 15
-      const h = 15
-      const l = 2
-      let c
-      switch (mouse.button) {
-        case "left":
-          c = "red"
-          break
-        case "right":
-          c = "green"
-          break
-        default:
-          c = "grey"
-          break
-      }
-
-      vancas.line({
-        x1: pos.x,
-        x2: pos.x,
-        y1: pos.y - h / 2,
-        y2: pos.y + h / 2,
-        lineWidth: l,
-        color: c,
-      })
-
-      vancas.line({
-        x1: pos.x - w / 2,
-        x2: pos.x + w / 2,
-        y1: pos.y,
-        y2: pos.y,
-        lineWidth: l,
-        color: c,
-      })
-    }
-  },
 })
-
 engine.addPostUpdateHook((engine) => {
   for (const obj of engine.objects) {
     if (obj.position.x < 0 || obj.position.x > world.width) {
@@ -184,5 +140,66 @@ engine.addPostUpdateHook((engine) => {
     }
   }
 })
+
+const menu = new Menu({ engine, mouse, pxPerM })
+const forceApplier = new ForceApplier({ engine, menu, mouse, pxPerM, vancas })
+
+vancas.render = () => {
+  vancas.background("lightgrey")
+
+  menu.updateInfo()
+
+  const colors = ["white", "brown", "purple", "yellow", "green", "blue", "orange", "pink", "cyan"]
+
+  for (const obj of engine.objects) {
+    const isSelected = obj.id === menu.selectedId
+    if (obj.mass === 0) {
+      drawers.draw(obj, "black", isSelected)
+    } else {
+      drawers.draw(obj, colors[obj.id % colors.length], isSelected)
+    }
+  }
+
+  forceApplier.draw()
+
+  if (mouse.position) {
+    const pos = mouse.position
+    const w = 15
+    const h = 15
+    const l = 2
+    let c
+    switch (mouse.button) {
+      case "left":
+        c = "red"
+        break
+      case "right":
+        c = "green"
+        break
+      default:
+        c = "grey"
+        break
+    }
+
+    vancas.line({
+      x1: pos.x,
+      x2: pos.x,
+      y1: pos.y - h / 2,
+      y2: pos.y + h / 2,
+      lineWidth: l,
+      color: c,
+    })
+
+    vancas.line({
+      x1: pos.x - w / 2,
+      x2: pos.x + w / 2,
+      y1: pos.y,
+      y2: pos.y,
+      lineWidth: l,
+      color: c,
+    })
+  }
+}
+
+vancas.start()
 
 engine.start()

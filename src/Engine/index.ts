@@ -234,6 +234,12 @@ export class PhysicsEngine {
   }
   public stop() {
     this.running = false
+    this.time = {
+      current: 0,
+      elapsed: 0,
+      previous: 0,
+      lag: 0,
+    }
   }
 
   private step() {

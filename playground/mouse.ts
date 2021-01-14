@@ -10,6 +10,7 @@ export class Mouse {
   public position: Vec2D | undefined
 
   private vancas: Vancas
+  private eventsListener: ((e: MouseEvent) => void)[] = []
 
   constructor(ops: MouseOptions) {
     this.vancas = ops.vancas
@@ -32,6 +33,10 @@ export class Mouse {
     this.vancas.canvasEl.addEventListener("mouseleave", (e) => {
       this.position = undefined
       this.button = undefined
+
+      for (const listener of this.eventsListener) {
+        listener(e)
+      }
     })
     this.vancas.canvasEl.addEventListener("mousemove", (e) => {
       this.setMousePosition(e)
@@ -42,10 +47,17 @@ export class Mouse {
     })
   }
 
+  public addEventListener(listener: (e: MouseEvent) => void) {
+    this.eventsListener.push(listener)
+  }
+
   private setMousePosition = (e: MouseEvent) => {
     this.position = new Vec2D(
       e.clientX - (this.vancas.canvasEl.offsetLeft - window.pageXOffset),
       e.clientY - (this.vancas.canvasEl.offsetTop - window.pageYOffset)
     )
+    for (const listener of this.eventsListener) {
+      listener(e)
+    }
   }
 }

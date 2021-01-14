@@ -1,10 +1,12 @@
 # Vysics Engine Playground
 
 > Little project to showcase the engine. Graphics based on [Vancas](https://github.com/Voxylu/vancas).
+> For now the code of the playground is a bit messy...
+> Nonetheless it's a good overview of a how to use the vysics-engine.
 
 ## Usage
 
-Start the development sever with:
+Start the development server with:
 
 ```sh
 npm start
@@ -12,6 +14,5 @@ npm start
 
 ## TODO
 
-- Object selection
-- Apply flick
 - More powerful creation of objects (polygons !)
+- Mouse constraint (maybe in replacement of force application)

@@ -16,12 +16,16 @@ export class Drawers {
     this.vancas = ops.vancas
   }
 
-  private polygon(polygon: PolygonRigidShape | RectangleRigidShape, color: string) {
+  private polygon(polygon: PolygonRigidShape | RectangleRigidShape, color: string, isSelected: boolean) {
     const vertices = polygon.vertices.map((v) => v.mul(this.pxPerM))
     const center = polygon.center.mul(this.pxPerM)
 
     const innerShaper = this.vancas.getShaper({ color })
-    const outlineShaper = this.vancas.getShaper({ color: "black", stroke: true })
+    const outlineShaper = this.vancas.getShaper({
+      color: isSelected ? "red" : "black",
+      stroke: true,
+      lineWidth: isSelected ? 3.0 : 1.0,
+    })
     innerShaper.start()
     innerShaper.go(vertices[0].x, vertices[0].y)
     outlineShaper.start()
@@ -36,10 +40,16 @@ export class Drawers {
     innerShaper.done()
     outlineShaper.done()
 
-    this.vancas.circle({ x: center.x, y: center.y, radius: 2, color: "black" })
+    this.vancas.circle({
+      x: center.x,
+      y: center.y,
+      radius: 2,
+      color: isSelected ? "red" : "black",
+      lineWidth: isSelected ? 3.0 : 1.0,
+    })
   }
 
-  private circle(circle: CircleRigidShape, color: string) {
+  private circle(circle: CircleRigidShape, color: string, isSelected: boolean) {
     const center = circle.center.mul(this.pxPerM)
     const radius = circle.radius * this.pxPerM
 
@@ -50,25 +60,27 @@ export class Drawers {
       y: center.y,
     })
     this.vancas.circle({
-      color: "black",
+      color: isSelected ? "red" : "black",
       radius,
       stroke: true,
       x: center.x,
       y: center.y,
+      lineWidth: isSelected ? 3.0 : 1.0,
     })
     this.vancas.circle({
-      color: "black",
+      color: isSelected ? "red" : "black",
       radius: 2,
       x: center.x,
       y: center.y,
+      lineWidth: isSelected ? 3.0 : 1.0,
     })
   }
 
-  public draw(object: PhysicalObject, color: string) {
+  public draw(object: PhysicalObject, color: string, isSelected: boolean) {
     if (object.shape.type === "circle") {
-      this.circle(object.shape, color)
+      this.circle(object.shape, color, isSelected)
     } else {
-      this.polygon(object.shape, color)
+      this.polygon(object.shape, color, isSelected)
     }
   }
 }
