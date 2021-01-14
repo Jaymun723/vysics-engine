@@ -1,5 +1,7 @@
 # Vysics Engine Playground
 
+⚠️ This project is still in early development !
+
 > Little project to showcase the engine. Graphics based on [Vancas](https://github.com/Voxylu/vancas).
 > For now the code of the playground is a bit messy...
 > Nonetheless it's a good overview of a how to use the vysics-engine.

@@ -73,6 +73,16 @@ export class ForceApplier {
         y1: this.startPoint.y,
         x2: this.mouse.position.x,
         y2: this.mouse.position.y,
+        color: "white",
+        lineWidth: 4.0,
+      })
+      this.vancas.line({
+        x1: this.startPoint.x,
+        y1: this.startPoint.y,
+        x2: this.mouse.position.x,
+        y2: this.mouse.position.y,
+        color: "black",
+        lineWidth: 3.0,
       })
     }
   }
