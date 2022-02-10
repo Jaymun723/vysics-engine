@@ -2,8 +2,10 @@
 
 ⚠️ This project is still in early development !
 
-> A "simple" 2D impulse based, rigid body physics engine.
+> A 2D impulse based, rigid body physics engine for the web.
 > The goal of this project is not to create a state of the art physics engine. The goal is to create an understandable code that people can read & used to better understand classic physics.
+
+🚀 [**Try it online**](https://jaymun723.github.io/vysics-engine/)
 
 Based on:
 
@@ -40,12 +42,12 @@ Based on:
   - Broad Phase:
     - Brute method ✅
     - Grid method ✅ 🔧
-    - R-Trees method 🔜
+    - R-Trees method 🔜 ([rbush](https://github.com/mourner/rbush) for inspiration)
   - Narrow phase:
     - SAT ✅
     - GJK 🔜
   - Resolution based on impulse ✅ 🔧
-  - Continuous detection 🔜
+  - Continuous detection 🔜 ([Physics for Game Programmers; Continuous Collision](https://www.youtube.com/watch?v=7_nKOET6zwI))
 
 ### More engine related parts
 
@@ -56,9 +58,9 @@ Based on:
 
 ## Examples
 
-> W.I.P.
+The [playground](https://jaymun723.github.io/vysics-engine/) and more importantly it's [code](./playground/) are a good example on how to use the vysics engine.
 
-For the moment look at the [playground folder](./playground).
+More examples will come after 🔜...
 
 ## Documentation
 

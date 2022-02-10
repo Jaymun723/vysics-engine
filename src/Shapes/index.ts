@@ -15,6 +15,9 @@ export interface BaseRigidShapeProps {
   angle: number
 }
 
+/**
+ * All shapes must be convex !
+ */
 export abstract class BaseRigidShape {
   /**
    * The distance between the centroid of the shape and the origin.
@@ -62,6 +65,11 @@ export abstract class BaseRigidShape {
 
   // TODO: maybe a better handling of this
   public abstract copy(): BaseRigidShape
+
+  /**
+   * Used in GJK
+   */
+  public abstract furthestPoint(direction: Vec2D): Vec2D
 }
 
 export * from "./Rectangle"

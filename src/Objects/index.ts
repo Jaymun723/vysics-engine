@@ -17,7 +17,7 @@ interface PhysicalObjectProps<Shape extends BaseRigidShape = RigidShape> {
 
   /**
    * "Bounciness" of the object
-   * @default 0.2
+   * @default 0.8
    */
   restitution?: number
 
@@ -151,7 +151,7 @@ export class PhysicalObject<Shape extends BaseRigidShape = RigidShape> {
     }
 
     this.friction = ops.friction || 0.8
-    this.restitution = ops.restitution || 0.2
+    this.restitution = ops.restitution || 0.8
 
     if (this.mass !== 0) {
       this.inertia = this.shape.getInertia(this.mass)
@@ -179,6 +179,8 @@ export class PhysicalObject<Shape extends BaseRigidShape = RigidShape> {
     this.acceleration = newAcceleration
     this.velocity = newVelocity
 
+    // this.velocity.mul(1.0 / (1.0 + dt * -1))
+
     this.force = new Vec2D(0, 0)
 
     const newAngle = this.angle + this.angularVelocity * dt + this.angularAcceleration * (dt ** 2 * 0.5)
@@ -190,6 +192,8 @@ export class PhysicalObject<Shape extends BaseRigidShape = RigidShape> {
     this.rotate(deltaAng)
     this.angularAcceleration = newAngularAcceleration
     this.angularVelocity = newAngularVelocity
+
+    // this.angularVelocity *= 1.0 / (1.0 + dt * -7)
 
     this.torque = 0
   }

@@ -57,4 +57,8 @@ export class CircleRigidShape extends BaseRigidShape {
       radius: this.radius,
     })
   }
+
+  public furthestPoint(d: Vec2D) {
+    return this.center.add(d.mul(this.radius))
+  }
 }

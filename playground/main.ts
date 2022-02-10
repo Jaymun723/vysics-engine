@@ -4,7 +4,7 @@
  */
 import { Vec2D } from "maabm"
 import { createVancas } from "vancas"
-import { PhysicsEngine } from "../src/Engine"
+import { createDumpingHook, PhysicsEngine } from "../src/Engine"
 import { PhysicalObject } from "../src/Objects"
 import { CircleRigidShape, RectangleRigidShape } from "../src/Shapes"
 import { Drawers } from "./drawers"
@@ -133,6 +133,11 @@ const engine = new PhysicsEngine({
   height: world.height,
   objects: startingObjects.map((o) => o.copy()),
 })
+
+const dampingHook = createDumpingHook({ linear: -0.1, angular: -0.1 })
+
+engine.addPreUpdateHook(dampingHook)
+
 engine.addPostUpdateHook((engine) => {
   for (const obj of engine.objects) {
     if (obj.position.x < 0 || obj.position.x > world.width) {

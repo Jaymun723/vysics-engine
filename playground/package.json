@@ -15,7 +15,7 @@
     "rimraf": "^2.7.1"
   },
   "dependencies": {
-    "maabm": "^1.11.2",
+    "maabm": "^1.12.0",
     "typescript": "^4.1.3",
     "vancas": "^1.4.1"
   }

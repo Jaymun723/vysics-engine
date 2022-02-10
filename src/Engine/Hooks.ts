@@ -29,6 +29,20 @@ export const createDragHook = (density: number) => {
   return dragHook
 }
 
+export const createDumpingHook = (ops: { linear: number; angular: number }) => {
+  const dumpingHook: UpdateHook = (engine) => {
+    for (const object of engine.objects) {
+      object.force = object.force.add(object.velocity.mul(ops.linear))
+      object.torque = object.angularVelocity * ops.angular
+      // v.mul(1.0 / (1.0 + h * body.m_linearDamping))
+      // w *= 1.0 / (1.0 + h * body.m_angularDamping)
+      // object.velocity = object.velocity.mul(1.0/(1.0+))
+    }
+  }
+
+  return dumpingHook
+}
+
 export interface ApplyFlickProps {
   object: PhysicalObject
   /**
@@ -40,20 +54,27 @@ export interface ApplyFlickProps {
    * In N
    */
   force: Vec2D
+  /**
+   * Should the function check if the point of application is in the shape.
+   * Disable only if you know what you do
+   * @default false
+   */
+  check?: boolean
 }
 /**
  * `applyFlick` is a shorthand function to apply a specified force on an object at a given point.
  */
-export const applyFlick = ({ force, object, pointOfApplication }: ApplyFlickProps) => {
-  if (object.shape.type === "circle") {
-    const dist = object.position.sub(pointOfApplication).norm()
+export const applyFlick = ({ force, object, pointOfApplication, check }: ApplyFlickProps) => {
+  if (!check) {
+    if (object.shape.type === "circle") {
+      const dist = object.position.sub(pointOfApplication).norm()
 
-    if (dist > object.shape.radius) return
-  } else {
-    if (Polygon.isPointIn(object.shape.vertices, pointOfApplication) === -1) return
+      if (dist > object.shape.radius) return
+    } else {
+      if (Polygon.isPointIn(object.shape.vertices, pointOfApplication) === -1) return
+    }
   }
-
-  object.force = force
+  object.force = object.force.add(force)
   const r = pointOfApplication.sub(object.position)
   object.torque = r.cross(force)
 }

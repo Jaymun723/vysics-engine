@@ -115,4 +115,15 @@ export class PolygonRigidShape extends BaseRigidShape {
       vertices: this.vertices,
     })
   }
+
+  public furthestPoint(d: Vec2D) {
+    let bestVertex = this.vertices[0]
+    for (let i = 1; i < this.vertices.length; i++) {
+      const vertex = this.vertices[i]
+      if (bestVertex.dot(d) < vertex.dot(d)) {
+        bestVertex = vertex
+      }
+    }
+    return bestVertex
+  }
 }

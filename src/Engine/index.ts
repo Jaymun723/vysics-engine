@@ -244,10 +244,13 @@ export class PhysicsEngine {
 
   private step() {
     if (!this.running) return
+
     const now = Date.now()
+
     if (this.time.previous === 0) {
       this.time.previous = now
     }
+
     requestAnimationFrame(() => {
       this.step()
     })
@@ -261,11 +264,15 @@ export class PhysicsEngine {
 
     while (this.time.lag >= this.updateIntervalMilliseconds) {
       this.time.lag -= this.updateIntervalMilliseconds
+
       for (const preHook of this.preUpdateHooks) {
         preHook(this)
       }
+
       this.computeCollisions()
+
       this.update(this.updateIntervalSeconds)
+
       for (const postHook of this.postUpdateHooks) {
         postHook(this)
       }

@@ -42,11 +42,18 @@ export class RectangleRigidShape extends BaseRigidShape {
 
     this.boundAABB = new Vec2D(this.width, this.height)
 
+    // this.vertices = [
+    //   this.center.add(-this.width / 2, -this.height / 2),
+    //   this.center.add(-this.width / 2, this.height / 2),
+    //   this.center.add(this.width / 2, this.height / 2),
+    //   this.center.add(this.width / 2, -this.height / 2),
+    // ]
+
     this.vertices = [
       this.center.add(-this.width / 2, -this.height / 2),
-      this.center.add(-this.width / 2, this.height / 2),
-      this.center.add(this.width / 2, this.height / 2),
       this.center.add(this.width / 2, -this.height / 2),
+      this.center.add(this.width / 2, this.height / 2),
+      this.center.add(-this.width / 2, this.height / 2),
     ]
 
     this.normals = RectangleRigidShape.computeNormal(this.vertices)
@@ -100,5 +107,16 @@ export class RectangleRigidShape extends BaseRigidShape {
       height: this.height,
       width: this.width,
     })
+  }
+
+  public furthestPoint(d: Vec2D) {
+    let bestVertex = this.vertices[0]
+    for (let i = 1; i < this.vertices.length; i++) {
+      const vertex = this.vertices[i]
+      if (bestVertex.dot(d) < vertex.dot(d)) {
+        bestVertex = vertex
+      }
+    }
+    return bestVertex
   }
 }

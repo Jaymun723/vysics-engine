@@ -5,6 +5,8 @@ export const resolveCollision = (
   collision: CollisionInfo<PhysicalObject, PhysicalObject>,
   positionalCorrection?: { iterations: number; rate: number }
 ) => {
+  const DEBUG = false
+
   if (collision.a.invMass === 0 && collision.b.invMass === 0) return
 
   if (positionalCorrection) {
@@ -54,10 +56,15 @@ export const resolveCollision = (
 
   const impulseNormal = n.mul(jN)
 
+  DEBUG && console.log("impulseNormal:", impulseNormal)
+
   collision.a.velocity = collision.a.velocity.sub(impulseNormal.mul(collision.a.invMass))
   collision.b.velocity = collision.b.velocity.add(impulseNormal.mul(collision.b.invMass))
   collision.a.angularVelocity -= rACrossN * jN * collision.a.invInertia
   collision.b.angularVelocity += rBCrossN * jN * collision.b.invInertia
+
+  DEBUG && console.log("a.velocity:", collision.a.velocity)
+  DEBUG && console.log("a.angularVelocity:", collision.a.angularVelocity)
 
   const tangent = relativeVelocity.sub(n.mul(rVelocityInNormal)).normalize().mul(-1)
 
