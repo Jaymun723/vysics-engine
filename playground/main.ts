@@ -134,10 +134,6 @@ const engine = new PhysicsEngine({
   objects: startingObjects.map((o) => o.copy()),
 })
 
-const dampingHook = createDumpingHook({ linear: -0.1, angular: -0.1 })
-
-engine.addPreUpdateHook(dampingHook)
-
 engine.addPostUpdateHook((engine) => {
   for (const obj of engine.objects) {
     if (obj.position.x < 0 || obj.position.x > world.width) {
