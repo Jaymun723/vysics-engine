@@ -17,7 +17,7 @@ interface PhysicalObjectProps<Shape extends BaseRigidShape = RigidShape> {
 
   /**
    * "Bounciness" of the object
-   * @default 0.8
+   * @default 0.2
    */
   restitution?: number
 
@@ -151,7 +151,7 @@ export class PhysicalObject<Shape extends BaseRigidShape = RigidShape> {
     }
 
     this.friction = ops.friction || 0.8
-    this.restitution = ops.restitution || 0.8
+    this.restitution = ops.restitution || 0.2
 
     if (this.mass !== 0) {
       this.inertia = this.shape.getInertia(this.mass)
