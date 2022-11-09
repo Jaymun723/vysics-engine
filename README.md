@@ -58,7 +58,7 @@ Based on:
 
 ## Examples
 
-The [playground](https://jaymun723.github.io/vysics-engine/) and more importantly it's [code](./playground/) are a good example on how to use the vysics engine.
+The [playground](https://jaymun723.github.io/vysics-engine/) and more importantly its [code](./playground/) are a good example on how to use the vysics engine.
 
 More examples will come after 🔜...
 
